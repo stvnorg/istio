@@ -1,0 +1,28 @@
+# If the request is to http://$GATEWAY_URL/ it will be routed to hello-js app v1
+# if the request is to http://$GATEWAY_URL/v2 it will be routed to hello-js app v2
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hello-js
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - hello-js-gateway
+  http:
+  - match:
+    - uri:
+        exact: /
+    route:
+    - destination:
+        host: hello-js
+        subset: v1
+  - match:
+    - uri:
+        exact: /v2
+    route:
+    - destination:
+        host: hello-js
+        subset: v2

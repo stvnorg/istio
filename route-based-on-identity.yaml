@@ -1,0 +1,22 @@
+# Route if the header contain key:value 'end-user: authuser'
+# Example: $> curl -H "end-user: authuser" http://$GATEWAY_URL
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: hello-js
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - hello-js-gateway
+  http:
+  - match:
+    - headers:
+        end-user:
+          exact: authuser
+    route:
+    - destination:
+        host: hello-js
+        subset: v1

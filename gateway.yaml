@@ -1,0 +1,20 @@
+# Istio gateway
+# If your cluster support the external load balancer such as AWS ELB then it will create a new elb endpoint
+# otherwise it will create new NodePort
+# to check whether its External LoadBalancer or NodePort you can use below command
+# kubectl -n istio-system get service istio-ingressgateway
+
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: hello-js-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"

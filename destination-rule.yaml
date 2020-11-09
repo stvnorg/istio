@@ -1,0 +1,19 @@
+# https://istio.io/latest/docs/examples/bookinfo/
+#
+# Apply default destination rules
+# Before you can use Istio to control the Bookinfo version routing, you need to define the available versions, called subsets, in destination rules.
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: hello-js
+spec:
+  host: hello-js
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+  - name: v2
+    labels:
+      version: v2

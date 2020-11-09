@@ -1,0 +1,76 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-js
+  labels:
+    app: hello-js
+    service: hello-js
+spec:
+  ports:
+  - port: 80
+    targetPort: 8000
+    name: http
+  selector:
+    app: hello-js
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: hello-js-sa
+  labels:
+    account: hello-js
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-js-v1
+  labels:
+    app: hello-js
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-js
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: hello-js
+        version: v1
+    spec:
+      serviceAccountName: hello-js-sa
+      containers:
+      - name: hello-js
+        image: s7even/hello-js:v1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-js-v2
+  labels:
+    app: hello-js
+    version: v2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-js
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: hello-js
+        version: v2
+    spec:
+      serviceAccountName: hello-js-sa
+      containers:
+      - name: hello-js
+        image: s7even/hello-js:v2
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8000
