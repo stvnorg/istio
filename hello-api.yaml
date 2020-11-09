@@ -1,0 +1,54 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-api
+  labels:
+    app: hello-api
+    service: hello-api
+spec:
+  ports:
+  - port: 80
+    targetPort: 3000
+    name: http
+  selector:
+    app: hello-api
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: hello-api-sa
+  labels:
+    account: hello-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-api-v1
+  labels:
+    app: hello-api
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-api
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: hello-api
+        version: v1
+    spec:
+      serviceAccountName: hello-api-sa
+      containers:
+      - name: hello-api
+        image: s7even/helloworld:0.0.4
+        imagePullPolicy: Always
+        env:
+        - name: PORT
+          value: "3000"
+        ports:
+          - name: http
+            containerPort: 3000
+            protocol: TCP

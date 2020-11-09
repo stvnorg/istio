@@ -1,0 +1,41 @@
+# https://istio.io/latest/docs/tasks/security/authorization/authz-http/
+
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: deny-all
+spec:
+  {}
+
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: hello-js-read-access
+spec:
+  selector:
+    matchLabels:
+      app: hello-js
+  rules:
+  - to:
+    - operation:
+        methods: ["GET"]
+
+---
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-api-read-access-from-hellojs
+spec:
+  selector:
+    matchLabels:
+      app: hello-api
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/default/sa/hello-js-sa"]
+    to:
+    - operation:
+        methods: ["GET"]
+
