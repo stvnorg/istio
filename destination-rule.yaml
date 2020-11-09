@@ -17,3 +17,16 @@ spec:
   - name: v2
     labels:
       version: v2
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: hello-api
+spec:
+  host: hello-api
+  subsets:
+  - name: v1
+    labels:
+      version: v1
+
